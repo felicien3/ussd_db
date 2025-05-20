@@ -12,3 +12,5 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.post('/ussd', ussd);
 
 app.listen(port, () => console.log(`USSD app listening on port ${port}!`));
+
+module.exports = app;

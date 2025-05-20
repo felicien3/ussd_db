@@ -3,24 +3,25 @@ const menus = require('./utils/menus');
 
 module.exports = (req, res) => {
   let { sessionId, phoneNumber, text } = req.body;
+  const inputs = text.split("*");
 
-  let textValue = text.split('*');
-  let level = textValue.length;
-
-  let response = '';
-
-  if (text === '') {
-    response = menus.welcome();
-  } else if (text === '1') {
-    response = menus.mainMenu('en');
-    db.createSession(sessionId, phoneNumber, 'English');
-  } else if (text === '2') {
-    response = menus.mainMenu('rw');
-    db.createSession(sessionId, phoneNumber, 'Kinyarwanda');
-  } else {
-    response = 'END Invalid choice';
+  // Level 0 - Welcome
+  if (text === "") {
+    res.send(menus.welcome());
   }
 
-  res.set('Content-Type: text/plain');
-  res.send(response);
+  // Level 1 - Language selection
+  else if (inputs.length === 1) {
+    res.send(menus.mainMenu(inputs[0]));
+  }
+
+  // Level 2 - Main Menu or Other Operations
+  else if (inputs.length === 2) {
+    res.send(menus.otherOperations(inputs[0]));
+  }
+
+  // Invalid input
+  else {
+    res.send("END Invalid choice");
+  }
 };
